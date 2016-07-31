@@ -1,0 +1,62 @@
+<%- contentFor('profile') %>
+    <% include ../partials/profile %>
+
+
+<%- contentFor('main') %>
+    <div class="main-wrapper">
+        <!-- content -->
+        <a id="" type="button" class="btn btn-default" style="float:right;margin-left:5px;margin-right:5px">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true" ></span>
+        </a>
+
+        <% if (typeof(time) !== 'undefined' && time.length !== 0) { %>
+            <a id="" type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px">
+                <span class="glyphicon glyphicon-time" aria-hidden="true" ></span> <%= time %>
+            </a>
+        <% } %>
+
+        <div style="min-height: 20px"></div>
+        <hr />
+
+        <% if (typeof(m) !== 'undefined' && m.length !== 0) { %>
+            <% for (var i = m.length - 1; i >= 0; i--) { %>
+                <section class="section summary-section" style="direction: rtl">
+                    <div class="detail">
+                        <span class="date" style="float: left;font-weight: bold">تاریخ : <%= m[i][0].time_laps %></span>
+                        <span class="user" style="font-size: 16px;font-weight: bold">مخاطب : <%= contact_info[i].reciever %></span> 
+                    </div>
+
+                    <div class="comment"> 
+                        <span id="message_sender" style="font-size: 16px;font-weight: bold"><%= contact_info[i].sender %> :</span> <%= m[i][0].message %>
+                    </div>
+
+                    <div id="edit_area" style="min-height: 20px;margin-top: 8px">                    
+                        <a id="" type="button" class="btn btn-danger delConversaion" style="float:left;margin-left:5px;margin-right:5px">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true" ></span>
+                        </a>
+
+                        <% if(new_message[i][0].total > 0) { %>
+                            <a type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px;">
+                                <span class="badge" id="notifyMessage" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal"> <%= new_message[i][0].total %> </span> جدید
+                            </a>
+                        <% } else { %>
+                            <a type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px">
+                                <span class="badge" id="notifyMessage"> <%= new_message[i][0].total %> </span> جدید
+                            </a>
+                        <% } %>
+
+                        <a href="" type="button" class="btn btn-default" style="float:right;margin-left:5px;margin-right:5px">
+                            <span class="badge" id="countMessage"> <%= total[i][0].total %> </span> پیام
+                        </a>
+
+                        
+                        <a href="#"  id="uploadInputTrigger" type="button" class="btn btn-default uploadInputTrigger" style="float:right;margin-left:5px;margin-right:5px">
+                            <span class="badge" id="notifyMessage"> 0 </span> فایل
+                        </a>
+                    </div>
+                </section><!--//section--> 
+            <% } %>
+        <% } else if (typeof(m) !== 'undefined' && m.length === 0) { %>
+            <h4 style="float:right;margin-left:5px;margin-right:5px;direction: rtl">شما هنوز پیامی ندارید.</h4>
+        <% } %> 
+    </div><!--//main-body-->

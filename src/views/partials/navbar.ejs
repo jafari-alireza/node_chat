@@ -1,0 +1,32 @@
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:#fff">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/home" style="font-weight: normal;font-size: 25px;font-family: monospace;color: #000000">Morse</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">   
+                    <li>
+                        <a href="/file" >فایل ها</a>
+                    </li>
+
+                    <li>
+                        <a href="/message" >پیام ها
+                            <span id="messageNotification"> 
+                                <span id="messageNotification" class="badge" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal">4</span>
+                            <span> 
+                        </a>
+                    </li>
+                    <% if (typeof(logged_in) === 'undefined') { %>
+                        <li><a href="/signup" >ثبت نام</a></li>
+                        <li><a href="/login" >ورود</a></li>
+                    <%}%>   
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>

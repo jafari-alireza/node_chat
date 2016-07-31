@@ -1,0 +1,34 @@
+<%- contentFor('main') %>
+	<div class="container" style="max-width:500px">
+		<div class="panel panel-default">
+
+			<div class="panel-body">
+				<form role="form" method="post" action="/auth/login">
+
+					<div class="form-group">
+						<input type="email" name="email" id="email" class="form-control" placeholder="Email Address">
+					</div>
+
+					<div class="group">
+						<div class="form-group">
+							<input type="password" name="password" id="password" class="form-control" placeholder="Password">
+						</div>
+					</div>
+
+					<input type="submit" value="ورود" class="btn btn-info btn-block" style="background-color: #42a8c0;color: #fff;font-size: 20px;font-family: sans-serif;font-weight:lighter;direction: rtl">
+
+				</form>
+				 <% if (typeof(login_message) !== 'undefined') { %>
+				   <hr />
+				   <div class="alert alert-danger" role="alert" style="direction: rtl">این حساب کاربری وجود ندارد</div>
+				 <%}%>
+			</div>
+		</div>
+	</div>
+
+<%- contentFor('src') %>
+<script type="text/javascript">
+	wrapper = document.getElementsByClassName('wrapper');
+	$(wrapper).css("background-color", "inherit");
+	$(wrapper).addClass('new_wrapper').removeClass('wrapper');
+</script>
