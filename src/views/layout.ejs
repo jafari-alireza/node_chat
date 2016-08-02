@@ -24,7 +24,11 @@
  
     <!-- footer -->
     <% include partials/footer %>
-    <%-defineContent('src')%>
+    <script type="text/javascript">
+        wrapper = document.getElementsByClassName('wrapper');
+        $(wrapper).css("background-color", "inherit");
+        $(wrapper).addClass('new_wrapper').removeClass('wrapper');
+    </script
     
 </body>
 </html> 
