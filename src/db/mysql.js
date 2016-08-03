@@ -2,18 +2,18 @@ var mysql = require("mysql");
 var cryptoJS = require("crypto-js");
 
 var cn = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database : "node_chat",
+  host: "127.12.201.2",
+  user: "adminlBaueD6",
+  password: "x1-KL-Ab9X-X",
+  database : "nodejs",
   multipleStatements: true
 });
 
 var pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database : "node_chat",
+  host: "127.12.201.2",
+  user: "adminlBaueD6",
+  password: "x1-KL-Ab9X-X",
+  database : "nodejs",
   connectionLimit: 10,
   supportBigNumbers: true
 });
