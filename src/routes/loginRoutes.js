@@ -3,7 +3,7 @@ var loginRouter = express.Router();
 
 loginRouter.use(function(req, res, next) {
 	if(req.user) {
-		res.redirect('/home');
+		res.redirect('/message');
 	}
 
 	next();

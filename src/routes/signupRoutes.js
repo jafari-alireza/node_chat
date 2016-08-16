@@ -3,7 +3,7 @@ var signinRouter = express.Router();
 
 signinRouter.use(function(req, res, next) {
 	if(req.user) {
-		res.redirect('/home');
+		res.redirect('/message');
 	}
 
 	next();
