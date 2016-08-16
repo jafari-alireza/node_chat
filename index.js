@@ -1,12 +1,13 @@
 var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 var layout = require('express-ejs-layouts');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var session = require('express-session');
 var morgan = require('morgan');
-
-var app = express();
 
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
@@ -22,6 +23,7 @@ var homeRouter = require('./src/routes/homeRoutes');
 var mysqlCon = require('./src/db/mysql');
 
 app.use(express.static('assets'));
+app.use('/scripts', express.static(__dirname + '/node_modules/bootstrap/dist/'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
@@ -49,7 +51,32 @@ app.use('/login', loginRouter);
 // 	console.log("listening on port " + port + " hello world :D ");
 // });
 
-app.listen(server_port, server_ip_address, function () {
+io.on('connection', function(socket) {
+  	console.log('a user connected');
+	socket.on('disconnect', function() {
+		console.log('user disconnected');
+	});
+
+  	socket.on('channel:message:send', function(message) {
+  		// console.log(data.id);
+	    channels = 'channel:message:send' + ':' + message.data.id;
+	    socket.broadcast.emit(channels, {message: message.data.message, 
+	    	username: message.data.username, time: message.data.time, unread_message: message.data.unread_message});
+  	});
+
+  	socket.on('channel:message:send:update', function(message) {
+  		// console.log(message.data.id);
+	    channels = 'channel:message:send:update' + ':' + message.data.contact_id;
+	    console.log(message.data.contact_id);
+	    socket.broadcast.emit(channels, {message: message.data.message, 
+	    	username: message.data.username, time: message.data.time, 
+	    	unread_message: message.data.unread_message,unread_message_detailed: message.data.unread_message_detailed, id: message.data.id});
+  	});
+
+
+ });
+
+server.listen(server_port, server_ip_address, function () {
   console.log( "Listening on " + server_ip_address + ", server_port " + server_port )
 });
 
