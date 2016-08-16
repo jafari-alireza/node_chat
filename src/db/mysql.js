@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var cryptoJS = require("crypto-js");
+var moment = require('moment');
 
 var cn = mysql.createConnection({
   host: "127.12.201.2",
@@ -36,7 +37,7 @@ exports.lastMessage = function(id, callback) {
 
 // get all message where session_id = id
 exports.allMessage = function(id, callback) {
-  var sql = "SELECT * FROM messages WHERE session_id=? ORDER BY id ASC";
+  var sql = "SELECT * FROM messages WHERE session_id=? ORDER BY id DESC";
   // get a connection from the pool
   pool.getConnection(function(err, connection) {
     if(err) { console.log(err); callback(true); return; }
@@ -63,6 +64,22 @@ exports.allMessage_count = function(id, callback) {
     if(err) { console.log(err); callback(true); return; }
     callback(false, results);
   })
+};
+
+// make hashed_id
+exports.insertMessage = function(message, hashed_id, sender, reciver, callback) {
+  var insert  = {message: message, user_id: sender, contact_id: reciver, session_id: hashed_id};
+  var sql = "INSERT INTO messages SET ?";
+  // get a connection from the pool
+  pool.getConnection(function(err, connection) {
+    if(err) { console.log(err); callback(true); return; }
+    // make the query
+    connection.query(sql, [insert], function(err, rows) {
+      connection.release();
+      if(err) { console.log(err); callback(true); return; }
+      callback(false, rows);
+    });
+  });
 };
 
 // get hashed_id
@@ -100,7 +117,7 @@ exports.hashedId_make = function(sender, reciver, callback) {
 
 // get user hashed_id
 exports.hashedId_distinct = function(id, callback) {
-  var sql = "SELECT DISTINCT session_id FROM messages WHERE user_id=? or contact_id=?";
+  var sql = "SELECT DISTINCT session_id FROM sessions_message WHERE sender=? or reciver=?";
   // get a connection from the pool
   pool.getConnection(function(err, connection) {
     if(err) { console.log(err); callback(true); return; }
@@ -135,7 +152,7 @@ exports.notification_message_user_all_unread_detail = function(id, session_id, c
 
   for (var i = session_id.length - 1; i >= 0; i--) {
     queries.push("SELECT COUNT(*) AS total FROM messages WHERE (session_id= " + cn.escape(session_id[i].session_id) + 
-        " AND " + "contact_id!=" +  cn.escape(id) + ") AND seen_at IS NULL");
+        " AND " + "user_id!=" +  cn.escape(id) + ") AND seen_at IS NULL");
     // queries.push("SELECT COUNT(*) AS total FROM messages WHERE session_id=" + cn.escape(id[i].session_id));
   }
 
@@ -145,6 +162,23 @@ exports.notification_message_user_all_unread_detail = function(id, session_id, c
     callback(false, results);
   })
 };
+
+
+// get all unread message as sender
+exports.notification_message_user_all_unread_detailed = function(contact_id, session_id, callback) {
+  var sql = "SELECT COUNT(*) AS total FROM messages WHERE session_id=? AND contact_id=? AND seen_at IS NULL";
+  // get a connection from the pool
+  pool.getConnection(function(err, connection) {
+    if(err) { console.log(err); callback(true); return; }
+    // make the query
+    connection.query(sql, [session_id, contact_id], function(err, rows) {
+      connection.release();
+      if(err) { console.log(err); callback(true); return; }
+      callback(false, rows);
+    });
+  });
+};
+
 
 // get all unread message as contact
 exports.notification_message_all_unseen = function(id, callback) {
@@ -169,6 +203,22 @@ exports.notification_message_all_unseen_detail = function(id, callback) {
     if(err) { console.log(err); callback(true); return; }
     // make the query
     connection.query(sql, [id], function(err, rows) {
+      connection.release();
+      if(err) { console.log(err); callback(true); return; }
+      callback(false, rows);
+    });
+  });
+};
+
+exports.notification_update = function(contact_id, session_id, callback) {
+  moment.locale('fa');
+  var now = moment();
+  var update  = {seen_at: now};
+  var sql = "UPDATE messages SET ? WHERE contact_id=? AND session_id=?";
+  pool.getConnection(function(err, connection) {
+    if(err) { console.log(err); callback(true); return; }
+    // make the query
+    connection.query(sql, [update, contact_id, session_id], function(err, rows) {
       connection.release();
       if(err) { console.log(err); callback(true); return; }
       callback(false, rows);
@@ -206,7 +256,21 @@ exports.contact_info = function(id, callback) {
     if(err) { console.log(err); callback(true); return; }
     callback(false, results);
   });
+};
 
+// get susers of the session
+exports.session_users = function(id, callback) {
+  var sql = "SELECT sender,reciver FROM sessions_message WHERE session_id=?";
+  // get a connection from the pool
+  pool.getConnection(function(err, connection) {
+    if(err) { console.log(err); callback(true); return; }
+    // make the query
+    connection.query(sql, [id], function(err, rows) {
+      connection.release();
+      if(err) { console.log(err); callback(true); return; }
+      callback(false, rows);
+    });
+  });
 };
 
 // get user_name

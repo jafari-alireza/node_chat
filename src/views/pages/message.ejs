@@ -9,6 +9,15 @@
             <span class="glyphicon glyphicon-envelope" aria-hidden="true" ></span>
         </a>
 
+<!--         <div style="min-height: 10px;width: 100%;display: inline-block"></div>
+        <input type="number" class="form-control" style="direction: rtl">
+        <div style="min-height: 5px;width: 100%;display: inline-block;"></div>
+        <textarea class="form-control" rows="3" style="direction: rtl" id="text_area_coment"></textarea>
+        <div style="min-height: 5px"></div>
+        <button type="button" class="btn btn-default" aria-label="Left Align" style="float: right" id="send_coment">
+          بفرست
+        </button> -->
+
         <% if (typeof(time) !== 'undefined' && time.length !== 0) { %>
             <a id="" type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px">
                 <span class="glyphicon glyphicon-time" aria-hidden="true" ></span> <%= time %>
@@ -20,14 +29,15 @@
 
         <% if (typeof(m) !== 'undefined' && m.length !== 0) { %>
             <% for (var i = m.length - 1; i >= 0; i--) { %>
-                <section class="section summary-section" style="direction: rtl">
+                <section class="section summary-section" style="direction: rtl" id="<%= m[i].session_id %>">
                     <div class="detail">
-                        <span class="date" style="float: left;font-weight: bold">تاریخ : <%= m[i][0].time_laps %></span>
+                        <span class="date" style="float: left;font-weight: bold">تاریخ : <%= m[i].time_laps %></span>
                         <span class="user" style="font-size: 16px;font-weight: bold">مخاطب : <%= contact_info[i].reciever %></span> 
                     </div>
 
                     <div class="comment"> 
-                        <span id="message_sender" style="font-size: 16px;font-weight: bold"><%= contact_info[i].sender %> :</span> <%= m[i][0].message %>
+                        <span id="comment_sender" style="font-size: 16px;font-weight: bold"><%= contact_info[i].sender %> :</span> 
+                        <span id="comment_message"> <%= m[i].message %></span> 
                     </div>
 
                     <div id="edit_area" style="min-height: 20px;margin-top: 8px">                    
@@ -35,24 +45,48 @@
                         <span class="glyphicon glyphicon-trash" aria-hidden="true" ></span>
                         </a>
 
-                        <% if(new_message[i][0].total > 0) { %>
-                            <a type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px;">
-                                <span class="badge" id="notifyMessage" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal"> <%= new_message[i][0].total %> </span> جدید
+                        <%if(new_message.length > 1 && total.length > 1) { %>
+
+                            <% if(new_message[i][0].total > 0) { %>
+                                <a id="new_messages" type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px;">
+                                    <span class="badge" id="notifyMessage" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal"> <%= new_message[i][0].total %> </span> جدید
+                                </a>
+                            <% } else { %>
+                                <a id="new_messages" type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px">
+                                    <span class="badge" id="notifyMessage"> <%= new_message[i][0].total %> </span> جدید
+                                </a>
+                            <% } %>
+
+                            <a href="message/to/<%= m[i].session_id %>"  id="uploadInputTrigger" type="button" class="btn btn-default uploadInputTrigger" style="float:right;margin-left:5px;margin-right:5px">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true" ></span>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>
                             </a>
+
+                            <a href="" type="button" class="btn btn-default" style="float:right;margin-left:5px;margin-right:5px">
+                                <span class="badge" id="countMessage"> <%= total[i][0].total %> </span> پیام
+                            </a>
+
                         <% } else { %>
-                            <a type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px">
-                                <span class="badge" id="notifyMessage"> <%= new_message[i][0].total %> </span> جدید
+                            <% if(new_message[i].total > 0) { %>
+                                <a id="new_messages" type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px;">
+                                    <span class="badge" id="notifyMessage" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal"> <%= new_message[i].total %> </span> جدید
+                                </a>
+                            <% } else { %>
+                                <a id="new_messages" type="button" class="btn btn-default" style="float:left;margin-left:5px;margin-right:5px">
+                                    <span class="badge" id="notifyMessage"> <%= new_message[i].total %> </span> جدید
+                                </a>
+                            <% } %>
+
+                            <a href="message/to/<%= m[i].session_id %>"  id="uploadInputTrigger" type="button" class="btn btn-default uploadInputTrigger" style="float:right;margin-left:5px;margin-right:5px">
+                                <span class="glyphicon glyphicon-envelope" aria-hidden="true" ></span>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>
+                            </a>
+
+                            <a href="" type="button" class="btn btn-default" style="float:right;margin-left:5px;margin-right:5px">
+                                <span class="badge" id="countMessage"> <%= total[i].total %> </span> پیام
                             </a>
                         <% } %>
 
-                        <a href="" type="button" class="btn btn-default" style="float:right;margin-left:5px;margin-right:5px">
-                            <span class="badge" id="countMessage"> <%= total[i][0].total %> </span> پیام
-                        </a>
-
-                        
-                        <a href="#"  id="uploadInputTrigger" type="button" class="btn btn-default uploadInputTrigger" style="float:right;margin-left:5px;margin-right:5px">
-                            <span class="badge" id="notifyMessage"> 0 </span> فایل
-                        </a>
                     </div>
                 </section><!--//section--> 
             <% } %>
@@ -60,3 +94,16 @@
             <h4 style="float:right;margin-left:5px;margin-right:5px;direction: rtl">شما هنوز پیامی ندارید.</h4>
         <% } %> 
     </div><!--//main-body-->
+    <%- contentFor('js') %>
+        <script>
+            var channels_message = 'channel:message:send:update' + ':' +  <%= contact_id %>;
+            socket.on(channels_message, function(data) {
+                var notification_container = document.getElementById('messageNotification');
+                var message_container = document.getElementById(data.id);
+                $(notification_container).html('<span id="notification" class="badge" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal">' 
+                        + data.unread_message + '</span>');
+                $(message_container).find("#comment_message").html(data.message);
+                $(message_container).find("#new_messages").html('<span class="badge" id="notifyMessage" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal">' 
+                        + data.unread_message_detailed + '</span> جدید');
+            });
+        </script>

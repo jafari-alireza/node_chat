@@ -1,0 +1,71 @@
+<%- contentFor('profile') %>
+    <% include ../partials/profile %>
+
+
+<%- contentFor('main') %>
+    <div class="main-wrapper">
+        <!-- content -->
+        <a id="" type="button" class="btn btn-default" style="float:right;margin-left:5px;margin-right:5px">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true" ></span>
+        </a>
+
+        <div style="min-height: 20px"></div>
+        <hr />
+        
+        <% if (typeof(message) !== 'undefined' && message.length !== 0) { %>
+            <div id="comment_container">
+                <% for (var i = message.length - 1; i >= 0; i--) { %>
+                    <section class="section summary-section" style="direction: rtl">
+                        <div class="detail">
+                            <span class="date" style="float: left;font-weight: bold">زمان : <%= date[i] %></span>
+                            <span class="user" style="font-size: 16px;font-weight: bold"><%= sender[i] %> : </span> 
+                        </div>
+
+                        <div class="comment"> 
+                            <%= message[i] %>
+                        </div>
+                    </section><!--//section--> 
+
+                    <% if (typeof(seen[i]) !== 'undefined' && seen[i].length !== 0) { %>
+                        <div>دیده شده : <%= seen[i] %></div>
+                    <% } %>
+
+                    <% if(i > 0) { %>
+                        <hr />
+                    <% } %>
+                <% } %>
+            </div>
+        <% } %>
+
+        <div style="min-height: 20px"></div>
+        <textarea class="form-control" rows="3" style="direction: rtl" id="text_area_coment"></textarea>
+        <div style="min-height: 5px"></div>
+        <button type="button" class="btn btn-default" aria-label="Left Align" style="float: right" id="send_coment" 
+            m_id=<%= session_id %>>
+          بفرست
+        </button>
+    </div><!--//main-body-->
+
+    <%- contentFor('js') %>
+        <script>
+            var channels_message = 'channel:message:send' + ':' +  <%= session_id %>;
+            // socket.emit('channel:message:send', <%= session_id %>);
+            socket.on(channels_message, function(data) {
+                var message = '<hr /><section class="section summary-section" style="direction: rtl">';
+                message += '<div class="detail">';
+                message += '<span class="date" style="float: left;font-weight: bold">زمان : ';
+                message += data.time + '</span>';
+                message += '<span class="user" style="font-size: 16px;font-weight: bold">';
+                message += data.username + ' :</span>';
+                message += '</div>';
+
+                message += '<div class="comment"> ';
+                message += data.message;
+                message += '</div>';
+                message += '</section>';
+
+                var obj = document.getElementById('comment_container');
+                $(obj).append(message);
+                // get_notification(data.contact_id);
+            });
+        </script>

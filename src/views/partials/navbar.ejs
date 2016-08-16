@@ -17,15 +17,21 @@
 
                     <li>
                         <a href="/message" >پیام ها
-                            <span id="messageNotification"> 
-                                <span id="messageNotification" class="badge" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal">4</span>
+                            <span id="messageNotification">
+                                <% if (typeof(total_unread) !== 'undefined') { %> 
+                                    <% if(total_unread > 0) { %>
+                                        <span id="notification" class="badge" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;font-weight: normal"><%= total_unread %></span>
+                                    <% } else { %>
+                                        <span id="notification" class="badge"><%= total_unread %></span>
+                                    <% } %> 
+                            <% } %>  
                             <span> 
                         </a>
                     </li>
                     <% if (typeof(logged_in) === 'undefined') { %>
                         <li><a href="/signup" >ثبت نام</a></li>
                         <li><a href="/login" >ورود</a></li>
-                    <%}%>   
+                    <% } %>   
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
